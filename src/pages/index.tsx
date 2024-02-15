@@ -11,9 +11,12 @@ import { Button } from "@mui/material";
 import { display } from "@mui/system";
 import { useModal } from "../hooks/useModal";
 import { AddUserDrawer } from "../components/UserManagement/AddUserDrawer";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { EditUserDrawer } from "../components/UserManagement/EditUserDrawer";
+import { User } from "../components/UserManagement/UserForm";
 
-const index = () => {
+const Home = () => {
+  const currentUserRef = useRef<User | null>(null);
   const [userIDForDelete, setUserIDForDelete] = useState<string | null>(null);
   const columns: GridColDef[] = [
     {
@@ -25,7 +28,7 @@ const index = () => {
     {
       flex: 0.25,
       minWidth: 200,
-      editable: true,
+      // editable: true,
       field: "full_name",
       headerName: "Name",
     },
@@ -33,14 +36,14 @@ const index = () => {
       flex: 0.25,
       minWidth: 230,
       field: "email",
-      editable: true,
+      // editable: true,
       headerName: "Email",
     },
     {
       flex: 0.15,
       type: "date",
       minWidth: 130,
-      editable: true,
+      // editable: true,
       headerName: "Date",
       field: "start_date",
       valueGetter: (params) => new Date(params.value),
@@ -48,17 +51,16 @@ const index = () => {
     {
       flex: 0.15,
       minWidth: 120,
-      editable: true,
+      // editable: true,
       field: "experience",
       headerName: "Experience",
     },
     {
       flex: 0.1,
-      field: "age",
+      field: "role",
       minWidth: 80,
-      type: "number",
-      editable: true,
-      headerName: "Age",
+      // editable: true,
+      headerName: "Role",
     },
     {
       field: "actions",
@@ -72,7 +74,11 @@ const index = () => {
             key="edit"
             icon={<Icon icon="mdi:pencil-outline" />}
             label="Edit"
-            // onClick={() => onEditUserClick?.(row)}
+            onClick={() => {
+              currentUserRef.current = row;
+
+              editUserModal.present();
+            }}
             showInMenu
           />,
           <GridActionsCellItem
@@ -90,6 +96,7 @@ const index = () => {
   ];
 
   const addUserModal = useModal();
+  const editUserModal = useModal();
   const [user, setUser] = useState(rows.slice(0, 10));
 
   const handleSubmit = useCallback((values: any) => {
@@ -102,7 +109,23 @@ const index = () => {
       },
     ]);
     console.log(values);
+    addUserModal.dismiss();
   }, []);
+
+  const handleEdit = useCallback((values: any) => {
+    setUser((prev) => [
+      ...prev,
+      {
+        id: Math.floor(Math.random() * 100),
+        full_name: "noey",
+        role: values.roleId,
+        ...values,
+      },
+    ]);
+    console.log(values);
+    editUserModal.dismiss();
+  }, []);
+
   return (
     <Card>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -115,6 +138,19 @@ const index = () => {
           onClose={addUserModal.dismiss}
           handleSubmit={handleSubmit}
         />
+
+        {currentUserRef.current == null ? null : (
+          <EditUserDrawer
+            user={currentUserRef.current}
+            open={editUserModal.open}
+            onClose={() => {
+              currentUserRef.current = null;
+
+              editUserModal.dismiss();
+            }}
+            handleSubmit={handleEdit}
+          />
+        )}
       </Box>
       <Box sx={{ height: 500 }}>
         <DataGrid columns={columns} rows={user} />
@@ -123,4 +159,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Home;

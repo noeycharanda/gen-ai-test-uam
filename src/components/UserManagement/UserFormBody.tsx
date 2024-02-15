@@ -3,6 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 
 import { SelectUserRole } from './SelectUserRole'
 import { type FormValues } from './UserForm'
+import { useEffect } from 'react'
 
 export const UserFormBody = () => {
 	const { watch } = useFormContext<FormValues>()

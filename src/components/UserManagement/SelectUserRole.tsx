@@ -22,7 +22,10 @@ export const SelectUserRole = (props: SelectUserRoleProps) => {
     name: props.name,
   });
 
-  const listUserRoles = [{ roleName: "admin", roleId: 3 }];
+  const listUserRoles = [
+    { roleName: "admin", roleId: 3 },
+    { roleName: "PX", roleId: 6 },
+  ];
 
   const options: Option[] = listUserRoles.map((role) => ({
     label: role.roleName,
