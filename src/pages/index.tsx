@@ -11,10 +11,12 @@ import { Button } from "@mui/material";
 import { display } from "@mui/system";
 import { useModal } from "../hooks/useModal";
 import { AddUserDrawer } from "../components/UserManagement/AddUserDrawer";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { EditUserDrawer } from "../components/UserManagement/EditUserDrawer";
 import { User } from "../components/UserManagement/UserForm";
 import { useRouter } from "next/router";
+
+import { roleName } from "../utils/helper";
 
 const Home = () => {
   const currentUserRef = useRef<User | null>(null);
@@ -25,7 +27,7 @@ const Home = () => {
     const userRoleId = route.query.role || 0;
     return Number(userRoleId) == 3;
   }, [route]);
-  console.log("isAdmin", isAdmin);
+  // console.log("isAdmin", isAdmin);
 
   const columns: GridColDef[] = [
     {
@@ -85,7 +87,6 @@ const Home = () => {
             label="Edit"
             onClick={() => {
               currentUserRef.current = row;
-
               editUserModal.present();
             }}
             showInMenu
@@ -112,10 +113,10 @@ const Home = () => {
     setUser((prev) => [
       ...prev,
       {
-        id: Math.floor(Math.random() * 100),
-        full_name: "noey",
-        role: values.roleId,
         ...values,
+        full_name: "noey",
+        role: roleName(values.roleId),
+        id: Math.floor(Math.random() * 100),
       },
     ]);
     console.log(values);
@@ -123,18 +124,21 @@ const Home = () => {
   }, []);
 
   const handleEdit = useCallback((values: any) => {
-    setUser((prev) => [
-      ...prev,
-      {
-        id: Math.floor(Math.random() * 100),
-        full_name: "noey",
-        role: values.roleId,
-        ...values,
-      },
-    ]);
-    console.log(values);
+    setUser(prevUsers => {
+      const updatedUsers = prevUsers.map(user => {
+        if (user.email === values.email) {
+          console.log(values);
+          values.role = roleName(values.roleId)
+          return { ...user, ...values };
+        }
+        return user;
+      });
+      return updatedUsers;
+    });
+    currentUserRef.current = null;
     editUserModal.dismiss();
   }, []);
+
 
   return (
     <Card>
@@ -155,7 +159,6 @@ const Home = () => {
             open={editUserModal.open}
             onClose={() => {
               currentUserRef.current = null;
-
               editUserModal.dismiss();
             }}
             handleSubmit={handleEdit}

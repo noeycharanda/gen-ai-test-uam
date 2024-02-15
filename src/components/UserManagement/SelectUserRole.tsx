@@ -23,7 +23,7 @@ export const SelectUserRole = (props: SelectUserRoleProps) => {
   });
 
   const listUserRoles = [
-    { roleName: "admin", roleId: 3 },
+    { roleName: "Admin", roleId: 3 },
     { roleName: "PX", roleId: 6 },
   ];
 

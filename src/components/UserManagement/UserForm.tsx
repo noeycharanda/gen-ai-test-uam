@@ -18,7 +18,7 @@ export type UserRole =
   | "USER MANAGER"
   | "ADMIN";
 export interface User {
-  userId: string;
+  id: string;
   employeeId: string;
   name: string;
   email: string;
@@ -30,6 +30,7 @@ export interface FormValues extends Omit<User, "roleId"> {
 }
 
 export interface ValidatedFormValues {
+  id: string;
   email: string;
   roleId: number;
 }
@@ -42,13 +43,14 @@ interface UserFormProps {
 
 export const UserForm = ({ form, onFinish, children }: UserFormProps) => {
   const onBeforeFinish = (formValues: FormValues) => {
-    const { email, roleId } = formValues;
+    const { email, roleId, id} = formValues;
 
     if (email == null || roleId == null || typeof roleId !== "number") {
       return;
     }
 
     onFinish({
+      id,
       email,
       roleId,
     });
@@ -58,7 +60,6 @@ export const UserForm = ({ form, onFinish, children }: UserFormProps) => {
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onBeforeFinish)}>
         <UserFormBody />
-
         {children}
       </form>
     </FormProvider>

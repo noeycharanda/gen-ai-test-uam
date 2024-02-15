@@ -74,7 +74,7 @@ export const EditUserDrawer = ({ open, user, onClose, handleSubmit }: EditUserDr
 							type="submit"
 							color="primary"
 							variant="contained"
-							disabled={!form.formState.isDirty}
+							// disabled={!form.formState.isDirty}
 						>
 							Submit
 						</LoadingButton>

@@ -8,7 +8,7 @@ import { useEffect } from 'react'
 export const UserFormBody = () => {
 	const { watch } = useFormContext<FormValues>()
 
-	const id = watch('userId') as string | null
+	const id = watch('id') as string | null
 	const disabled = id != null
 
 	return (
