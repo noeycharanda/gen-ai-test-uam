@@ -87,7 +87,6 @@ const Home = () => {
               currentUserRef.current = row;
 
               editUserModal.present();
-              console.log(currentUserRef.current?.id);
             }}
             showInMenu
           />,
