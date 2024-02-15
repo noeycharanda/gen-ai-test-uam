@@ -76,6 +76,7 @@ const Home = () => {
             label="Edit"
             onClick={() => {
               currentUserRef.current = row;
+              
 
               editUserModal.present();
             }}

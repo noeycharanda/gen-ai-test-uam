@@ -36,11 +36,12 @@ export interface ValidatedFormValues {
 
 interface UserFormProps {
   form: UseFormReturn<FormValues>;
+  id?: string;
   onFinish: (dataForAPI: ValidatedFormValues) => void;
   children: ReactNode;
 }
 
-export const UserForm = ({ form, onFinish, children }: UserFormProps) => {
+export const UserForm = ({ form, onFinish, id,  children }: UserFormProps) => {
   const onBeforeFinish = (formValues: FormValues) => {
     const { email, roleId } = formValues;
 
@@ -57,7 +58,7 @@ export const UserForm = ({ form, onFinish, children }: UserFormProps) => {
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onBeforeFinish)}>
-        <UserFormBody />
+        <UserFormBody userId={id} />
 
         {children}
       </form>

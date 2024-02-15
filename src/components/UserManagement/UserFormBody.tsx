@@ -5,7 +5,11 @@ import { SelectUserRole } from './SelectUserRole'
 import { type FormValues } from './UserForm'
 import { useEffect } from 'react'
 
-export const UserFormBody = () => {
+type Props = {
+	userId?: string
+}
+
+export const UserFormBody = ({userId} : Props) => {
 	const { watch } = useFormContext<FormValues>()
 
 	const id = watch('userId') as string | null
