@@ -11,13 +11,22 @@ import { Button } from "@mui/material";
 import { display } from "@mui/system";
 import { useModal } from "../hooks/useModal";
 import { AddUserDrawer } from "../components/UserManagement/AddUserDrawer";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { EditUserDrawer } from "../components/UserManagement/EditUserDrawer";
 import { User } from "../components/UserManagement/UserForm";
+import { useRouter } from "next/router";
 
 const Home = () => {
   const currentUserRef = useRef<User | null>(null);
   const [userIDForDelete, setUserIDForDelete] = useState<string | null>(null);
+
+  const route = useRouter();
+  const isAdmin = useMemo(() => {
+    const userRoleId = route.query.role || 0;
+    return Number(userRoleId) == 3;
+  }, [route]);
+  console.log("isAdmin", isAdmin);
+
   const columns: GridColDef[] = [
     {
       flex: 0.1,
@@ -78,6 +87,7 @@ const Home = () => {
               currentUserRef.current = row;
 
               editUserModal.present();
+              console.log(currentUserRef.current?.id);
             }}
             showInMenu
           />,
@@ -105,6 +115,7 @@ const Home = () => {
       {
         id: Math.floor(Math.random() * 100),
         full_name: "noey",
+        role: values.roleId,
         ...values,
       },
     ]);
@@ -129,7 +140,7 @@ const Home = () => {
   return (
     <Card>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <CardHeader title="Editable" />
+        <CardHeader title={isAdmin ? "Admin" : "PX"} />
         <Button color="primary" onClick={addUserModal.present}>
           Add User
         </Button>
